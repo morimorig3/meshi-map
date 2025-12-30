@@ -14,7 +14,7 @@
 
 | 技術          | バージョン | 用途                              | 選定理由                                            |
 | ------------- | ---------- | --------------------------------- | --------------------------------------------------- |
-| Next.js       | 15.x       | Webアプリケーションフレームワーク | React ベース、Cloudflare Pages対応、SSR/SSG対応     |
+| Next.js       | 16.x       | Webアプリケーションフレームワーク | React ベース、Cloudflare Pages対応、SSR/SSG対応     |
 | React         | 19.x       | UIライブラリ                      | Next.js標準搭載、コンポーネントベース開発           |
 | Tailwind CSS  | 4.x        | CSSフレームワーク                 | ユーティリティファースト、高速開発、Next.js公式推奨 |
 | React Leaflet | 5.x        | 地図コンポーネント                | Leafletのreactラッパー、無料・オープンソース        |
@@ -43,9 +43,9 @@
 | ---------- | ---------- | ------------------ | ---------------------------------- |
 | ESLint     | 9.x        | 静的解析           | コード品質の担保、チーム開発の統一 |
 | Prettier   | 3.x        | コードフォーマット | 一貫したコードスタイル             |
-| Vitest     | 2.x        | ユニットテスト     | Vite互換、高速、TypeScript native  |
+| Vitest     | 4.x        | ユニットテスト     | Vite互換、高速、TypeScript native  |
 | Playwright | 1.x        | E2Eテスト          | クロスブラウザ対応、信頼性が高い   |
-| Wrangler   | 3.x        | Cloudflare開発CLI  | ローカル開発・デプロイ             |
+| Wrangler   | 4.x        | Cloudflare開発CLI  | ローカル開発・デプロイ             |
 
 ## アーキテクチャパターン
 
@@ -403,7 +403,7 @@ const validationRules = {
 ```json
 {
   "dependencies": {
-    "next": "^15.0.0", // メジャーバージョン固定、マイナー自動
+    "next": "^16.0.0", // メジャーバージョン固定、マイナー自動
     "react": "^19.0.0", // Next.js互換バージョン
     "hono": "^4.0.0", // メジャーバージョン固定
     "@supabase/supabase-js": "^2.0.0",
@@ -412,9 +412,9 @@ const validationRules = {
   },
   "devDependencies": {
     "typescript": "~5.3.0", // パッチバージョンのみ自動
-    "vitest": "^2.0.0",
+    "vitest": "^4.0.0",
     "playwright": "^1.40.0",
-    "wrangler": "^3.0.0"
+    "wrangler": "^4.0.0"
   }
 }
 ```

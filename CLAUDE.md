@@ -6,7 +6,7 @@
 - Node.js v24.11.0
 - TypeScript 5.x
 - パッケージマネージャー: npm
-- フロントエンド: Next.js 15.x + React 19.x + Tailwind CSS 4.x
+- フロントエンド: Next.js 16.x + React 19.x + Tailwind CSS 4.x
 - バックエンド: Hono 4.x + Cloudflare Workers
 - データベース: Supabase (PostgreSQL)
 
