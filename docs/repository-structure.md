@@ -9,7 +9,7 @@ meshi-map/
 │   └── api/                       # バックエンド (Hono)
 ├── packages/                      # 共有パッケージ
 │   ├── shared/                    # 共通型定義・ユーティリティ
-│   └── database/                  # Supabaseクライアント
+│   └── database/                  # Prismaクライアント・スキーマ
 ├── docs/                          # プロジェクトドキュメント
 ├── .claude/                       # Claude Code設定
 ├── .steering/                     # ステアリングファイル
@@ -210,30 +210,30 @@ packages/shared/
 
 ### packages/database/ (データベースパッケージ)
 
-**役割**: Supabaseクライアントの初期化とデータベーススキーマ定義
+**役割**: Prismaクライアントの初期化とデータベーススキーマ定義
 
 ```
 packages/database/
+├── prisma/
+│   ├── schema.prisma              # Prismaスキーマ定義
+│   └── migrations/                # マイグレーションファイル
+│       └── 20250101000000_initial_schema/
+│           └── migration.sql
 ├── src/
-│   ├── client.ts                  # Supabaseクライアント
-│   ├── schema/                    # スキーマ定義
-│   │   ├── shops.ts               # Shopsテーブル
-│   │   └── registrations.ts       # Registrationsテーブル
+│   ├── client.ts                  # Prismaクライアント初期化
 │   └── index.ts                   # エクスポート
-├── migrations/                    # マイグレーションファイル
-│   └── 001_initial_schema.sql
 ├── tsconfig.json
 └── package.json
 ```
 
 **命名規則**:
 
-- スキーマ: kebab-case、テーブル名と同一（`shops.ts`）
-- マイグレーション: `[番号]_[説明].sql`
+- スキーマ: `schema.prisma`（単一ファイル）
+- マイグレーション: Prisma自動生成（`[タイムスタンプ]_[説明]/migration.sql`）
 
 **依存関係**:
 
-- 依存可能: `packages/shared`（型定義のみ）、`@supabase/supabase-js`
+- 依存可能: `packages/shared`（型定義のみ）、`prisma`、`@prisma/client`
 - 依存禁止: `apps/*`
 
 ---
@@ -440,13 +440,13 @@ import { ShopSearchService } from './ShopSearchService'; // 循環依存！
 
 ### スケールアップの閾値
 
-| 指標            | 閾値（80%到達） | 測定方法                                   | 測定頻度 | 対策                             |
-| --------------- | --------------- | ------------------------------------------ | -------- | -------------------------------- |
-| ユーザー数      | 500人超過       | Supabase Analytics（匿名ユーザーID数）     | 週次     | 有料プランへの移行検討           |
-| 店舗数          | 5,000店舗超過   | `SELECT COUNT(*) FROM shops`               | 週次     | インデックスの追加、クエリ最適化 |
-| 登録数          | 50,000件超過    | `SELECT COUNT(*) FROM registrations`       | 週次     | ページネーションの実装           |
-| Supabase DB容量 | 400MB超過       | Supabase Dashboard「Database Usage」       | 週次     | データ圧縮、アーカイブ検討       |
-| ファイルサイズ  | 500行超過       | ESLintルール `max-lines`、PR時自動チェック | PR毎     | ファイル分割実施                 |
+| 指標           | 閾値（80%到達） | 測定方法                                   | 測定頻度 | 対策                             |
+| -------------- | --------------- | ------------------------------------------ | -------- | -------------------------------- |
+| ユーザー数     | 500人超過       | DBクエリ（匿名ユーザーID数）               | 週次     | 有料プランへの移行検討           |
+| 店舗数         | 5,000店舗超過   | `SELECT COUNT(*) FROM shops`               | 週次     | インデックスの追加、クエリ最適化 |
+| 登録数         | 50,000件超過    | `SELECT COUNT(*) FROM registrations`       | 週次     | ページネーションの実装           |
+| DB容量         | 400MB超過       | Supabase Dashboard「Database Usage」       | 週次     | データ圧縮、アーカイブ検討       |
+| ファイルサイズ | 500行超過       | ESLintルール `max-lines`、PR時自動チェック | PR毎     | ファイル分割実施                 |
 
 ### ファイルサイズの管理
 

@@ -22,10 +22,11 @@
 
 ### バックエンドフレームワーク・ライブラリ
 
-| 技術                  | バージョン | 用途                     | 選定理由                                                  |
-| --------------------- | ---------- | ------------------------ | --------------------------------------------------------- |
-| Hono                  | 4.x        | APIフレームワーク        | 軽量（12KB）、Cloudflare Workers最適化、TypeScript native |
-| @supabase/supabase-js | 2.x        | データベースクライアント | Supabase公式クライアント、型安全                          |
+| 技術               | バージョン | 用途                   | 選定理由                                                  |
+| ------------------ | ---------- | ---------------------- | --------------------------------------------------------- |
+| Hono               | 4.x        | APIフレームワーク      | 軽量（12KB）、Cloudflare Workers最適化、TypeScript native |
+| Prisma             | 6.x        | ORM / データベース管理 | 型安全なクエリ、自動マイグレーション、スキーマ定義        |
+| @prisma/adapter-pg | 6.x        | PostgreSQLアダプター   | Prisma + Supabase (PostgreSQL) の接続                     |
 
 ### インフラ・外部サービス
 
@@ -39,13 +40,14 @@
 
 ### 開発ツール
 
-| 技術       | バージョン | 用途               | 選定理由                           |
-| ---------- | ---------- | ------------------ | ---------------------------------- |
-| ESLint     | 9.x        | 静的解析           | コード品質の担保、チーム開発の統一 |
-| Prettier   | 3.x        | コードフォーマット | 一貫したコードスタイル             |
-| Vitest     | 4.x        | ユニットテスト     | Vite互換、高速、TypeScript native  |
-| Playwright | 1.x        | E2Eテスト          | クロスブラウザ対応、信頼性が高い   |
-| Wrangler   | 4.x        | Cloudflare開発CLI  | ローカル開発・デプロイ             |
+| 技術       | バージョン | 用途                 | 選定理由                           |
+| ---------- | ---------- | -------------------- | ---------------------------------- |
+| ESLint     | 9.x        | 静的解析             | コード品質の担保、チーム開発の統一 |
+| Prettier   | 3.x        | コードフォーマット   | 一貫したコードスタイル             |
+| Vitest     | 4.x        | ユニットテスト       | Vite互換、高速、TypeScript native  |
+| Playwright | 1.x        | E2Eテスト            | クロスブラウザ対応、信頼性が高い   |
+| Wrangler   | 4.x        | Cloudflare開発CLI    | ローカル開発・デプロイ             |
+| Prisma CLI | 6.x        | マイグレーション管理 | スキーマ変更の自動適用、型生成     |
 
 ## アーキテクチャパターン
 
@@ -137,12 +139,12 @@
 
 - **責務**: ビジネスロジックの実装、トランザクション管理
 - **許可される操作**: リポジトリレイヤーの呼び出し
-- **禁止される操作**: APIレイヤーへの依存、Supabaseクライアントの直接利用
+- **禁止される操作**: APIレイヤーへの依存、Prismaクライアントの直接利用
 
 #### リポジトリレイヤー
 
 - **責務**: データアクセスの抽象化、クエリの実行
-- **許可される操作**: Supabaseクライアント、外部APIへのアクセス
+- **許可される操作**: Prismaクライアント、外部APIへのアクセス
 - **禁止される操作**: ビジネスロジックの実装
 
 ## データ永続化戦略
@@ -235,7 +237,7 @@
 | --------------------- | ------------------------ | ------------------------------------ |
 | 通信                  | HTTPS                    | Cloudflare自動提供                   |
 | Google Places APIキー | 環境変数                 | Cloudflare Workers Secrets           |
-| Supabase接続情報      | 環境変数                 | Cloudflare Workers Secrets           |
+| DATABASE_URL          | 環境変数                 | Cloudflare Workers Secrets           |
 | データベース          | Row Level Security (RLS) | Supabase設定（将来のユーザー認証時） |
 
 ### 入力検証
@@ -267,7 +269,7 @@ const validationRules = {
 | 脅威                | 対策                                               |
 | ------------------- | -------------------------------------------------- |
 | APIキー露出         | バックエンドでのみ使用、フロントエンドに露出しない |
-| SQLインジェクション | Supabaseクライアントのパラメータバインディング     |
+| SQLインジェクション | Prismaの型安全なクエリビルダー                     |
 | XSS                 | Reactの自動エスケープ、dangerouslySetInnerHTML禁止 |
 | CSRF                | SameSite Cookie（将来の認証時）、CORS設定          |
 | 不正アクセス        | 匿名ユーザーIDによるデータ分離                     |
@@ -325,14 +327,14 @@ const validationRules = {
   - 関数カバレッジ: 90%以上
 - **モック戦略**:
   - Google Places API: MSW（Mock Service Worker）
-  - Supabase: supabase-test-helpers
+  - Prisma: prismock または vitest-mock-extended
 - **実行タイミング**:
   - ローカル: pre-commit hook（lint-staged経由）
   - CI: プルリクエスト作成時、mainブランチへのpush時
 
 ### 統合テスト
 
-- **フレームワーク**: Vitest + Supabase Test Helpers
+- **フレームワーク**: Vitest + Prisma（テスト用DB）
 - **対象**:
   - APIエンドポイントの正常系・異常系
   - データベース操作のCRUD
@@ -406,12 +408,14 @@ const validationRules = {
     "next": "^16.0.0", // メジャーバージョン固定、マイナー自動
     "react": "^19.0.0", // Next.js互換バージョン
     "hono": "^4.0.0", // メジャーバージョン固定
-    "@supabase/supabase-js": "^2.0.0",
+    "@prisma/client": "^6.0.0",
+    "@prisma/adapter-pg": "^6.0.0",
     "leaflet": "^1.9.0",
     "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "typescript": "~5.3.0", // パッチバージョンのみ自動
+    "prisma": "^6.0.0", // Prisma CLI
     "vitest": "^4.0.0",
     "playwright": "^1.40.0",
     "wrangler": "^4.0.0"
@@ -443,8 +447,17 @@ const validationRules = {
 npm run dev           # Next.js開発サーバー (localhost:3000)
 npm run dev:api       # Wrangler開発サーバー (localhost:8787)
 
+# Prismaコマンド
+npx prisma generate   # Prisma Clientの生成
+npx prisma migrate dev # マイグレーション実行（開発環境）
+npx prisma studio     # データベースGUI
+
 # 環境変数（.env.local）
 NEXT_PUBLIC_API_URL=http://localhost:8787
+
+# 環境変数（apps/api/.dev.vars）
+DATABASE_URL=postgresql://...
+GOOGLE_PLACES_API_KEY=...
 ```
 
 ### ステージング環境
@@ -463,10 +476,17 @@ NEXT_PUBLIC_API_URL=http://localhost:8787
 
 | 変数名                | 用途                  | 設定場所                   |
 | --------------------- | --------------------- | -------------------------- |
+| DATABASE_URL          | PostgreSQL接続文字列  | Cloudflare Workers Secrets |
 | GOOGLE_PLACES_API_KEY | Google Places API認証 | Cloudflare Workers Secrets |
-| SUPABASE_URL          | Supabase接続先        | Cloudflare Workers Secrets |
-| SUPABASE_ANON_KEY     | Supabase匿名キー      | Cloudflare Workers Secrets |
 | NEXT_PUBLIC_API_URL   | バックエンドAPI URL   | Cloudflare Pages環境変数   |
+
+**DATABASE_URL の形式**:
+
+```
+postgresql://[user]:[password]@[host]:[port]/[database]?pgbouncer=true
+```
+
+※ Supabase では、Settings > Database > Connection string から取得可能
 
 ## CI/CDパイプライン
 

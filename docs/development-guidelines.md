@@ -594,14 +594,28 @@ const mockGooglePlacesClient = {
   }),
 };
 
-// Supabaseのモック
-const mockSupabase = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  insert: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  single: vi.fn(),
-};
+// Prismaのモック（prismockまたはvi.mock）
+import { PrismaClient } from '@prisma/client';
+import { mockDeep, DeepMockProxy } from 'vitest-mock-extended';
+
+const mockPrisma: DeepMockProxy<PrismaClient> = mockDeep<PrismaClient>();
+
+// モックの使用例
+mockPrisma.shop.findMany.mockResolvedValue([
+  {
+    id: '1',
+    placeId: 'ChIJ...',
+    name: 'テストラーメン店',
+    address: '東京都渋谷区...',
+    latitude: 35.6812,
+    longitude: 139.7671,
+    category: 'ラーメン',
+    photoUrl: null,
+    googleMapsUrl: 'https://maps.google.com/?q=...',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+]);
 ```
 
 ## コードレビュー基準
@@ -681,12 +695,18 @@ npm run dev           # 全体
 npm run dev:web       # フロントエンドのみ (localhost:3000)
 npm run dev:api       # バックエンドのみ (localhost:8787)
 
-# 5. テストの実行
+# 5. Prismaのセットアップ
+npm run db:generate   # Prismaクライアント生成
+npm run db:migrate    # マイグレーション実行（開発環境）
+npm run db:push       # スキーマをDBに直接反映（プロトタイピング用）
+npm run db:studio     # Prisma Studio起動（DBブラウザ）
+
+# 6. テストの実行
 npm run test          # 全体
 npm run test:web      # フロントエンドのみ
 npm run test:api      # バックエンドのみ
 
-# 6. ビルド
+# 7. ビルド
 npm run build         # 全体
 ```
 
@@ -706,10 +726,9 @@ NEXT_PUBLIC_API_URL=http://localhost:8787
 # https://console.cloud.google.com/apis/credentials
 GOOGLE_PLACES_API_KEY=your_api_key_here
 
-# Supabase設定（Supabaseダッシュボードから取得）
-# https://supabase.com/dashboard/project/_/settings/api
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key_here
+# データベース接続URL（Supabase PostgreSQL）
+# Supabaseダッシュボード > Settings > Database > Connection string (URI)
+DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
 ```
 
 **注意事項**:
@@ -731,7 +750,11 @@ SUPABASE_ANON_KEY=your_anon_key_here
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "npm run generate -w packages/database",
+    "db:migrate": "npm run migrate:dev -w packages/database",
+    "db:push": "npm run push -w packages/database",
+    "db:studio": "npm run studio -w packages/database"
   }
 }
 ```

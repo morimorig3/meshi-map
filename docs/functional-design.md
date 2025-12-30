@@ -37,6 +37,7 @@ graph TB
 | -------------- | ------------------------ | ----------------------------------------- |
 | フロントエンド | Next.js                  | React ベース、Cloudflare Pages と相性良い |
 | バックエンド   | Hono                     | 軽量、Cloudflare Workers と相性良い       |
+| ORM            | Prisma                   | 型安全なクエリ、自動マイグレーション      |
 | データベース   | Supabase (PostgreSQL)    | 無料枠あり、認証機能内蔵（将来利用）      |
 | 地図ライブラリ | Leaflet (React Leaflet)  | 無料、オープンソース、軽量                |
 | 店舗検索API    | Google Places API        | 日本のデータが豊富、無料枠あり            |
@@ -693,7 +694,7 @@ sequenceDiagram
 **モック戦略**:
 
 - Google Places API: MSW（Mock Service Worker）でモック
-- Supabase: supabase-test-helpers を使用
+- Prisma: prismock または vitest-mock-extended でモック
 
 **対象**:
 | コンポーネント | テストケース |
@@ -708,7 +709,7 @@ sequenceDiagram
 
 ### 統合テスト
 
-**フレームワーク**: Vitest + Supabase Test Helpers
+**フレームワーク**: Vitest + Prisma（テスト用DB）
 
 **対象**:
 | エンドポイント | テストケース |
