@@ -7,6 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +26,8 @@
     "apps/web",
     "apps/api",
     "packages/shared"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "^3.7.4"
+  }
 }

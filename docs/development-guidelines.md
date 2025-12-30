@@ -7,19 +7,21 @@
 #### 変数・関数
 
 **TypeScript**:
+
 ```typescript
 // ✅ 良い例
 const shopSearchResults = await searchShops(keyword);
-function validateRegistrationData(data: RegistrationData): void { }
+function validateRegistrationData(data: RegistrationData): void {}
 const isRegistered = checkIfRegistered(placeId);
 
 // ❌ 悪い例
 const data = await search(kw);
-function validate(d: any): void { }
+function validate(d: any): void {}
 const flag = check(id);
 ```
 
 **原則**:
+
 - 変数: camelCase、名詞または名詞句
 - 関数: camelCase、動詞で始める
 - 定数: UPPER_SNAKE_CASE
@@ -29,12 +31,12 @@ const flag = check(id);
 
 ```typescript
 // クラス: PascalCase、名詞 + 役割サフィックス
-class ShopSearchService { }
-class RegistrationRepository { }
+class ShopSearchService {}
+class RegistrationRepository {}
 
 // インターフェース: PascalCase
-interface Shop { }
-interface RegistrationWithShop { }
+interface Shop {}
+interface RegistrationWithShop {}
 
 // 型エイリアス: PascalCase
 type ShopCategory = 'ラーメン' | 'イタリアン' | '寿司';
@@ -43,15 +45,15 @@ type Nullable<T> = T | null;
 
 #### ファイル名
 
-| 種別 | 命名規則 | 例 |
-|------|---------|-----|
-| Reactコンポーネント | PascalCase | `MapView.tsx`, `ShopPopup.tsx` |
-| カスタムフック | camelCase + use | `useGeolocation.ts`, `useRegistrations.ts` |
-| サービス | PascalCase + Service | `ShopSearchService.ts` |
-| リポジトリ | PascalCase + Repository | `ShopRepository.ts` |
-| 型定義 | kebab-case | `shop.ts`, `registration.ts` |
-| 定数 | kebab-case | `api-endpoints.ts`, `error-codes.ts` |
-| ユーティリティ | kebab-case | `api-client.ts`, `storage.ts` |
+| 種別                | 命名規則                | 例                                         |
+| ------------------- | ----------------------- | ------------------------------------------ |
+| Reactコンポーネント | PascalCase              | `MapView.tsx`, `ShopPopup.tsx`             |
+| カスタムフック      | camelCase + use         | `useGeolocation.ts`, `useRegistrations.ts` |
+| サービス            | PascalCase + Service    | `ShopSearchService.ts`                     |
+| リポジトリ          | PascalCase + Repository | `ShopRepository.ts`                        |
+| 型定義              | kebab-case              | `shop.ts`, `registration.ts`               |
+| 定数                | kebab-case              | `api-endpoints.ts`, `error-codes.ts`       |
+| ユーティリティ      | kebab-case              | `api-client.ts`, `storage.ts`              |
 
 ### コードフォーマット
 
@@ -60,6 +62,7 @@ type Nullable<T> = T | null;
 **行の長さ**: 最大100文字
 
 **Prettier設定** (`.prettierrc`):
+
 ```json
 {
   "semi": true,
@@ -73,6 +76,7 @@ type Nullable<T> = T | null;
 ### コメント規約
 
 **関数・クラスのドキュメント（TSDoc）**:
+
 ```typescript
 /**
  * 店舗を検索する
@@ -92,6 +96,7 @@ async function searchShops(
 ```
 
 **インラインコメント**:
+
 ```typescript
 // ✅ 良い例: なぜそうするかを説明
 // Google Places APIの無料枠を考慮し、1回の検索で最大20件に制限
@@ -105,6 +110,7 @@ const MAX_SEARCH_RESULTS = 20;
 ### エラーハンドリング
 
 **カスタムエラークラス**:
+
 ```typescript
 // packages/shared/src/errors/ValidationError.ts
 export class ValidationError extends Error {
@@ -143,6 +149,7 @@ export class ExternalApiError extends Error {
 ```
 
 **エラーハンドリングパターン**:
+
 ```typescript
 // ✅ 良い例: 適切なエラーハンドリング
 async function getRegistration(id: string, userId: string): Promise<Registration> {
@@ -280,6 +287,7 @@ import clsx from 'clsx';
 ### React / Next.js 固有の規約
 
 **コンポーネントの構造**:
+
 ```typescript
 // ✅ 良い例: 明確な構造
 import { useState, useEffect } from 'react';
@@ -311,6 +319,7 @@ export function ShopMarker({ shop, onClick }: ShopMarkerProps) {
 ```
 
 **カスタムフックの設計**:
+
 ```typescript
 // ✅ 良い例: 単一責務、再利用可能
 export function useGeolocation() {
@@ -338,6 +347,7 @@ export function useGeolocation() {
 ### Hono 固有の規約
 
 **ルート定義**:
+
 ```typescript
 // ✅ 良い例: 責務の分離
 // apps/api/src/routes/shops.ts
@@ -364,6 +374,7 @@ export { shops };
 ```
 
 **ミドルウェア**:
+
 ```typescript
 // apps/api/src/middleware/validateUserId.ts
 import { Context, Next } from 'hono';
@@ -393,6 +404,7 @@ export async function validateUserId(c: Context, next: Next) {
 architecture.mdのCI/CDパイプラインと整合した運用です。
 
 **ブランチ構成**:
+
 ```
 main (本番環境)
 ├── feature/* (新機能開発)
@@ -402,12 +414,14 @@ main (本番環境)
 ```
 
 **ブランチ命名規則**:
+
 - `feature/add-shop-filter`: 新機能追加
 - `fix/search-error-handling`: バグ修正
 - `refactor/api-client`: リファクタリング
 - `docs/update-readme`: ドキュメント更新
 
 **運用ルール**:
+
 - `main`: 常に本番デプロイ可能な状態を維持
 - 全ての変更はPRを通じて`main`にマージ
 - 直接コミット禁止: `main`への直接pushは禁止、必ずPRレビューを経由
@@ -417,6 +431,7 @@ main (本番環境)
 ### コミットメッセージ規約
 
 **Conventional Commits**:
+
 ```
 <type>(<scope>): <subject>
 
@@ -437,6 +452,7 @@ main (本番環境)
 | chore | ビルド・設定 | `chore: ESLint設定を更新` |
 
 **良いコミットメッセージの例**:
+
 ```
 feat(registration): 店舗登録機能を追加
 
@@ -453,34 +469,43 @@ Closes #15
 ### プルリクエストプロセス
 
 **作成前のチェック**:
+
 - [ ] 全てのテストがパス (`npm run test`)
 - [ ] Lintエラーがない (`npm run lint`)
 - [ ] 型チェックがパス (`npm run typecheck`)
 - [ ] ビルドが成功する (`npm run build`)
 
 **PRテンプレート**:
+
 ```markdown
 ## 概要
+
 [変更内容の簡潔な説明]
 
 ## 変更理由
+
 [なぜこの変更が必要か]
 
 ## 変更内容
+
 - [変更点1]
 - [変更点2]
 
 ## テスト
+
 - [ ] ユニットテスト追加/更新
 - [ ] 手動テスト実施
 
 ## スクリーンショット（UI変更の場合）
+
 [画像]
 
 ## 関連Issue
+
 Closes #[Issue番号]
 
 ## レビューポイント
+
 [特に見てほしい点]
 ```
 
@@ -490,20 +515,20 @@ Closes #[Issue番号]
 
 テストファイルの配置については[リポジトリ構造定義書](./repository-structure.md#テストディレクトリ)も参照してください。
 
-| テスト種別 | フレームワーク | 配置先 | 命名規則 |
-|-----------|--------------|--------|---------|
-| ユニットテスト | Vitest | `apps/*/\_\_tests\_\_/` | `[対象ファイル名].test.ts(x)` |
-| 統合テスト | Vitest | `apps/*/\_\_tests\_\_/integration/` | `[シナリオ].test.ts` |
-| E2Eテスト | Playwright | `tests/e2e/` (プロジェクトルート) | `[シナリオ].spec.ts` |
+| テスト種別     | フレームワーク | 配置先                              | 命名規則                      |
+| -------------- | -------------- | ----------------------------------- | ----------------------------- |
+| ユニットテスト | Vitest         | `apps/*/\_\_tests\_\_/`             | `[対象ファイル名].test.ts(x)` |
+| 統合テスト     | Vitest         | `apps/*/\_\_tests\_\_/integration/` | `[シナリオ].test.ts`          |
+| E2Eテスト      | Playwright     | `tests/e2e/` (プロジェクトルート)   | `[シナリオ].spec.ts`          |
 
 ### カバレッジ目標（architecture.md準拠）
 
-| カバレッジ種別 | 目標値 | 測定方法 |
-|--------------|--------|---------|
-| 行カバレッジ | 80%以上 | `vitest --coverage` |
-| 分岐カバレッジ | 75%以上 | `vitest --coverage` |
-| 関数カバレッジ | 90%以上 | `vitest --coverage` |
-| 主要フローE2E | 100%カバー | Playwrightレポート |
+| カバレッジ種別 | 目標値     | 測定方法            |
+| -------------- | ---------- | ------------------- |
+| 行カバレッジ   | 80%以上    | `vitest --coverage` |
+| 分岐カバレッジ | 75%以上    | `vitest --coverage` |
+| 関数カバレッジ | 90%以上    | `vitest --coverage` |
+| 主要フローE2E  | 100%カバー | Playwrightレポート  |
 
 ### テストの書き方（Given-When-Then）
 
@@ -536,9 +561,7 @@ describe('ShopSearchService', () => {
       const emptyKeyword = '';
 
       // When/Then: 実行と検証
-      await expect(
-        service.search(emptyKeyword)
-      ).rejects.toThrow(ValidationError);
+      await expect(service.search(emptyKeyword)).rejects.toThrow(ValidationError);
     });
 
     it('100文字を超えるキーワードでValidationErrorをスローする', async () => {
@@ -547,9 +570,7 @@ describe('ShopSearchService', () => {
       const longKeyword = 'a'.repeat(101);
 
       // When/Then: 実行と検証
-      await expect(
-        service.search(longKeyword)
-      ).rejects.toThrow(ValidationError);
+      await expect(service.search(longKeyword)).rejects.toThrow(ValidationError);
     });
   });
 });
@@ -588,26 +609,31 @@ const mockSupabase = {
 ### レビューポイント
 
 **[必須] 機能性**（満たさない場合はマージ不可）:
+
 - [ ] PRDの要件を満たしているか（P0機能は100%満たす必要あり）
 - [ ] エッジケースが考慮されているか（空文字列、null、undefined、境界値）
 - [ ] エラーハンドリングが適切か（予期されるエラーは全てハンドリング）
 
 **[必須] セキュリティ**（満たさない場合はマージ不可）:
+
 - [ ] 入力検証が適切か（バリデーションルール準拠）
 - [ ] APIキーがハードコードされていないか（環境変数のみ使用）
 - [ ] XSS/SQLインジェクション対策がされているか
 
 **[推奨] 可読性**（改善が望ましいが必須ではない）:
+
 - [ ] 命名が明確で一貫しているか（命名規則準拠）
 - [ ] 複雑なロジックにコメントがあるか（O(n^2)以上、ビジネスロジック）
 - [ ] 関数が適切なサイズか（50行以内推奨、100行超は要説明）
 
 **[推奨] 保守性**（改善が望ましいが必須ではない）:
+
 - [ ] 重複コードがないか（DRY原則、3回以上の繰り返しは抽出）
 - [ ] レイヤー間の依存関係が適切か（architecture.md準拠）
 - [ ] 変更の影響範囲が限定的か（1つの責務に集中）
 
 **[推奨] パフォーマンス**（改善が望ましいが必須ではない）:
+
 - [ ] 不要なAPI呼び出しがないか（キャッシュ活用）
 - [ ] 適切なデータ構造を使用しているか（O(1)アクセスが必要ならMapを使用）
 - [ ] N+1問題がないか（バッチ処理を検討）
@@ -615,6 +641,7 @@ const mockSupabase = {
 ### レビューコメントの書き方
 
 **優先度の明示**:
+
 ```markdown
 [必須] セキュリティ: APIキーが露出しています。環境変数に移動してください。
 
@@ -629,10 +656,10 @@ const mockSupabase = {
 
 ### 必要なツール
 
-| ツール | バージョン | インストール方法 |
-|--------|-----------|-----------------|
-| Node.js | v24.11.0 | nvm または公式サイトから |
-| npm | 11.x | Node.jsに同梱 |
+| ツール  | バージョン | インストール方法         |
+| ------- | ---------- | ------------------------ |
+| Node.js | v24.11.0   | nvm または公式サイトから |
+| npm     | 11.x       | Node.jsに同梱            |
 
 ### セットアップ手順
 
@@ -666,12 +693,14 @@ npm run build         # 全体
 ### 環境変数の設定
 
 **apps/web/.env.local**:
+
 ```bash
 # バックエンドAPI URL
 NEXT_PUBLIC_API_URL=http://localhost:8787
 ```
 
 **apps/api/.dev.vars**:
+
 ```bash
 # Google Places API キー（Google Cloud Consoleから取得）
 # https://console.cloud.google.com/apis/credentials
@@ -684,6 +713,7 @@ SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
 **注意事項**:
+
 - 実際のAPIキーは絶対にGitにコミットしないこと
 - チームメンバーへは別途安全な方法で共有（パスワードマネージャー等）
 - 本番環境のキーはCloudflare Dashboard（Secrets）で管理
@@ -765,13 +795,8 @@ jobs:
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md}": ["prettier --write"]
   }
 }
 ```
@@ -787,15 +812,12 @@ npm run typecheck
 Conventional Commitsの規約をCIおよびローカルで強制するため、commitlintを導入します。
 
 **設定ファイル** (`.commitlintrc.json`):
+
 ```json
 {
   "extends": ["@commitlint/config-conventional"],
   "rules": {
-    "type-enum": [
-      2,
-      "always",
-      ["feat", "fix", "docs", "style", "refactor", "test", "chore"]
-    ],
+    "type-enum": [2, "always", ["feat", "fix", "docs", "style", "refactor", "test", "chore"]],
     "scope-case": [2, "always", "kebab-case"],
     "subject-case": [0],
     "subject-max-length": [2, "always", 72],
@@ -805,11 +827,13 @@ Conventional Commitsの規約をCIおよびローカルで強制するため、c
 ```
 
 **Husky commit-msg フック** (`.husky/commit-msg`):
+
 ```bash
 npx --no -- commitlint --edit "$1"
 ```
 
 **セットアップ手順**:
+
 ```bash
 # 必要なパッケージをインストール
 npm install -D @commitlint/cli @commitlint/config-conventional
@@ -820,6 +844,7 @@ chmod +x .husky/commit-msg
 ```
 
 **エラー例と対処**:
+
 ```bash
 # ❌ エラー: type が不正
 $ git commit -m "add new feature"

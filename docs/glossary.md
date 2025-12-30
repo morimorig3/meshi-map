@@ -21,6 +21,7 @@ Google Places APIから取得した店舗情報をシステム内で管理する
 **関連用語**: [登録](#登録-registration)、[Place ID](#place-id)
 
 **使用例**:
+
 - 「店舗を検索する」: Google Places APIを通じて店舗情報を取得する
 - 「店舗を登録する」: 検索結果の店舗を自分のリストに追加する
 
@@ -39,16 +40,17 @@ Google Places APIから取得した店舗情報をシステム内で管理する
 **関連用語**: [店舗](#店舗-shop)、[匿名ユーザー](#匿名ユーザー-anonymous-user)
 
 **使用例**:
+
 - 「登録店舗を地図上に表示する」
 - 「登録を解除する」: 店舗を自分のリストから削除する
 
 **関連API**:
 
-| メソッド | エンドポイント | 説明 |
-|---------|---------------|------|
-| POST | `/api/registrations` | 店舗を登録 |
-| GET | `/api/registrations` | 登録一覧を取得 |
-| DELETE | `/api/registrations/{id}` | 登録を解除 |
+| メソッド | エンドポイント            | 説明           |
+| -------- | ------------------------- | -------------- |
+| POST     | `/api/registrations`      | 店舗を登録     |
+| GET      | `/api/registrations`      | 登録一覧を取得 |
+| DELETE   | `/api/registrations/{id}` | 登録を解除     |
 
 **データモデル**: `packages/shared/src/types/registration.ts`
 
@@ -66,10 +68,12 @@ UUID v4形式の匿名ユーザーIDでユーザーを識別する。
 **関連用語**: [登録](#登録-registration)、[ユーザー認証](#ユーザー認証-user-authentication)
 
 **使用例**:
+
 - 「匿名ユーザーIDを生成する」: 初回起動時にUUIDを生成
 - 「匿名ユーザーIDをリクエストヘッダに付与する」
 
 **制約事項**:
+
 - ブラウザのLocalStorageに依存
 - 異なるブラウザ・デバイス間での同期不可
 - データ消失リスクあり
@@ -87,6 +91,7 @@ Leafletの地図上に配置されるピン状のアイコン。
 **関連用語**: [ポップアップ](#ポップアップ-popup)、[地図](#地図-map)
 
 **使用例**:
+
 - 「登録店舗のマーカーを表示する」
 - 「マーカーをタップして詳細を表示する」
 
@@ -103,6 +108,7 @@ Leafletの地図上に配置されるピン状のアイコン。
 **関連用語**: [マーカー](#マーカー-marker)、[店舗](#店舗-shop)
 
 **使用例**:
+
 - 「ポップアップを閉じる」
 - 「ポップアップからGoogle Mapsを開く」
 
@@ -129,20 +135,22 @@ P1（重要）の将来機能として計画。
 
 **分類**:
 
-| レベル | 名称 | 説明 | リリースへの影響 |
-|--------|------|------|-----------------|
-| P0 | 必須 | MVP機能。リリースに必須 | なければリリース不可 |
-| P1 | 重要 | MVP後に実装すべき重要機能 | 初回リリース後に対応 |
-| P2 | できれば | 将来的に検討する機能 | 余裕があれば対応 |
+| レベル | 名称     | 説明                      | リリースへの影響     |
+| ------ | -------- | ------------------------- | -------------------- |
+| P0     | 必須     | MVP機能。リリースに必須   | なければリリース不可 |
+| P1     | 重要     | MVP後に実装すべき重要機能 | 初回リリース後に対応 |
+| P2     | できれば | 将来的に検討する機能      | 余裕があれば対応     |
 
 **関連用語**: [MVP](#mvp)
 
 **使用例**:
+
 - 「店舗検索はP0なので最優先で実装する」
 - 「ユーザー認証はP1として位置づけられている」
 - 「お気に入りフォルダ機能はP2として将来検討」
 
 **本プロジェクトでのP0機能**:
+
 - 店舗検索
 - 店舗登録
 - 地図表示
@@ -155,6 +163,7 @@ P1（重要）の将来機能として計画。
 **定義**: 店舗検索時にユーザーが入力するテキスト
 
 **制約**:
+
 - 文字数: 1〜100文字
 - 空文字列は不可
 - 100文字を超える場合はValidationError
@@ -162,6 +171,7 @@ P1（重要）の将来機能として計画。
 **関連用語**: [店舗](#店舗-shop)、[ValidationError](#validationerror)
 
 **使用例**:
+
 - 「渋谷 ラーメン」で検索
 - 「新宿 イタリアン」で検索
 
@@ -184,6 +194,7 @@ Next.jsの基盤としてフロントエンドUIを構築。
 **バージョン**: 19.x
 
 **選定理由**:
+
 - コンポーネントベースの再利用性
 - 豊富なエコシステム
 - Next.jsとの統合
@@ -203,6 +214,7 @@ App Routerを採用し、Cloudflare Pagesにデプロイ。
 **バージョン**: 15.x
 
 **選定理由**:
+
 - Reactベースで開発効率が高い
 - Cloudflare Pagesとの相性が良い
 - SSR/SSG対応
@@ -222,6 +234,7 @@ Cloudflare Workers上で動作。
 **バージョン**: 4.x
 
 **選定理由**:
+
 - 軽量（約12KB）
 - Cloudflare Workers最適化
 - TypeScriptネイティブ対応
@@ -241,6 +254,7 @@ React Leafletラッパーを通じてReactコンポーネントとして利用�
 **バージョン**: 1.9.x
 
 **選定理由**:
+
 - 無料・オープンソース
 - 軽量で高速
 - OpenStreetMapタイル対応
@@ -260,6 +274,7 @@ Reactの宣言的な記法で地図機能を実装。
 **バージョン**: 5.x
 
 **選定理由**:
+
 - React 19対応
 - Leafletの全機能をReactで利用可能
 - TypeScript型定義が充実
@@ -281,6 +296,7 @@ PostgreSQLデータベースとして使用。
 **バージョン**: supabase-js 2.x
 
 **選定理由**:
+
 - 無料枠あり
 - PostgreSQLベース
 - 認証機能内蔵（将来利用）
@@ -301,6 +317,7 @@ PostgreSQLデータベースとして使用。
 **コスト**: 月間$200の無料クレジット
 
 **選定理由**:
+
 - 日本の飲食店データが豊富
 - 無料クレジットあり
 - 信頼性が高い
@@ -317,6 +334,7 @@ PostgreSQLデータベースとして使用。
 Next.jsフロントエンドのホスティング。
 
 **選定理由**:
+
 - 無料枠が充実
 - グローバルCDN
 - クレジットカード登録不要
@@ -331,10 +349,12 @@ Next.jsフロントエンドのホスティング。
 HonoバックエンドAPIのホスティング。
 
 **制約**:
+
 - CPU時間: 10ms/リクエスト（無料枠）
 - メモリ: 128MB
 
 **選定理由**:
+
 - 無料枠が充実
 - エッジでの低レイテンシ
 - Honoとの相性が良い
@@ -348,6 +368,7 @@ HonoバックエンドAPIのホスティング。
 **意味**: アプリケーション間でデータをやり取りするためのインターフェース
 
 **本プロジェクトでの使用**:
+
 - バックエンドAPI: `/api/shops/*`, `/api/registrations/*`
 - 外部API: Google Places API
 
@@ -401,6 +422,7 @@ Google Mapsへのリンク生成に利用。
 **定義**: 複数のプロジェクト/パッケージを単一のリポジトリで管理する構成
 
 **本プロジェクトでの適用**:
+
 ```
 meshi-map/
 ├── apps/
@@ -412,6 +434,7 @@ meshi-map/
 ```
 
 **メリット**:
+
 - コード共有が容易
 - 一貫したバージョン管理
 - 統一されたCI/CD
@@ -436,6 +459,7 @@ APIレイヤー (routes/)
 ```
 
 **メリット**:
+
 - 関心の分離による保守性向上
 - テストが容易
 - 変更の影響範囲が限定的
@@ -447,6 +471,7 @@ APIレイヤー (routes/)
 **定義**: HTTPリクエストを受け付け、レスポンスを返す層
 
 **責務**:
+
 - ルーティング
 - リクエストのバリデーション
 - 認証・認可チェック
@@ -454,10 +479,12 @@ APIレイヤー (routes/)
 - レスポンスの整形
 
 **禁止事項**:
+
 - ビジネスロジックの実装
 - データベースへの直接アクセス
 
 **本プロジェクトでの実装**:
+
 - `apps/api/src/routes/shops.ts`
 - `apps/api/src/routes/registrations.ts`
 
@@ -468,16 +495,19 @@ APIレイヤー (routes/)
 **定義**: ビジネスロジックを実装する層
 
 **責務**:
+
 - ビジネスルールの適用
 - 複数リポジトリの調整
 - トランザクション管理
 - 外部API呼び出しの調整
 
 **禁止事項**:
+
 - APIレイヤーへの依存
 - Supabaseクライアントの直接利用（リポジトリ経由）
 
 **本プロジェクトでの実装**:
+
 - `ShopSearchService`: 店舗検索ロジック
 - `RegistrationService`: 登録・解除ロジック
 
@@ -488,15 +518,18 @@ APIレイヤー (routes/)
 **定義**: データアクセスを抽象化する層
 
 **責務**:
+
 - データベースCRUD操作
 - クエリの構築と実行
 - データマッピング
 
 **禁止事項**:
+
 - ビジネスロジックの実装
 - 複数エンティティにまたがる操作
 
 **本プロジェクトでの実装**:
+
 - `ShopRepository`: 店舗テーブルへのアクセス
 - `RegistrationRepository`: 登録テーブルへのアクセス
 
@@ -507,11 +540,13 @@ APIレイヤー (routes/)
 **定義**: 実際のデータストアや外部サービスとの接続を管理する層
 
 **責務**:
+
 - データベース接続管理
 - 外部API接続管理
 - 接続プール管理
 
 **本プロジェクトでの実装**:
+
 - Supabase (PostgreSQL)
 - Google Places API
 
@@ -525,23 +560,24 @@ APIレイヤー (routes/)
 
 **主要フィールド**:
 
-| フィールド | 型 | 制約 |
-|-----------|-----|------|
-| `id` | UUID | PK |
-| `place_id` | TEXT | UNIQUE, NOT NULL |
-| `name` | TEXT | NOT NULL, 1-200文字 |
-| `address` | TEXT | NOT NULL |
-| `latitude` | DECIMAL | NOT NULL, -90〜90 |
-| `longitude` | DECIMAL | NOT NULL, -180〜180 |
-| `category` | TEXT | NOT NULL |
-| `photo_url` | TEXT | NULL許容 |
-| `google_maps_url` | TEXT | NOT NULL |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT now() |
-| `updated_at` | TIMESTAMP | NOT NULL, DEFAULT now() |
+| フィールド        | 型        | 制約                    |
+| ----------------- | --------- | ----------------------- |
+| `id`              | UUID      | PK                      |
+| `place_id`        | TEXT      | UNIQUE, NOT NULL        |
+| `name`            | TEXT      | NOT NULL, 1-200文字     |
+| `address`         | TEXT      | NOT NULL                |
+| `latitude`        | DECIMAL   | NOT NULL, -90〜90       |
+| `longitude`       | DECIMAL   | NOT NULL, -180〜180     |
+| `category`        | TEXT      | NOT NULL                |
+| `photo_url`       | TEXT      | NULL許容                |
+| `google_maps_url` | TEXT      | NOT NULL                |
+| `created_at`      | TIMESTAMP | NOT NULL, DEFAULT now() |
+| `updated_at`      | TIMESTAMP | NOT NULL, DEFAULT now() |
 
 **関連エンティティ**: [registrations](#registrations-テーブル)
 
 **制約**:
+
 - `place_id` はユニーク
 - `name`, `address`, `category` は必須
 - `latitude` は -90〜90 の範囲
@@ -553,16 +589,17 @@ APIレイヤー (routes/)
 
 **主要フィールド**:
 
-| フィールド | 型 | 制約 |
-|-----------|-----|------|
-| `id` | UUID | PK |
-| `anonymous_user_id` | UUID | NOT NULL |
-| `shop_id` | UUID | FK → shops.id, NOT NULL |
-| `created_at` | TIMESTAMP | NOT NULL, DEFAULT now() |
+| フィールド          | 型        | 制約                    |
+| ------------------- | --------- | ----------------------- |
+| `id`                | UUID      | PK                      |
+| `anonymous_user_id` | UUID      | NOT NULL                |
+| `shop_id`           | UUID      | FK → shops.id, NOT NULL |
+| `created_at`        | TIMESTAMP | NOT NULL, DEFAULT now() |
 
 **関連エンティティ**: [shops](#shops-テーブル)
 
 **制約**:
+
 - `anonymous_user_id` + `shop_id` の組み合わせはユニーク
 - `shop_id` は shops テーブルへの外部キー
 
@@ -573,17 +610,20 @@ APIレイヤー (routes/)
 **クラス名**: `ValidationError`
 
 **発生条件**:
+
 - リクエストパラメータが不正な場合
 - 検索キーワードが空または長すぎる場合
 - 匿名ユーザーIDの形式が不正な場合
 
 **対処方法**:
+
 - ユーザー: エラーメッセージに従って入力を修正
 - 開発者: バリデーションルールを確認
 
 **HTTPステータス**: 400 Bad Request
 
 **例**:
+
 ```typescript
 throw new ValidationError('キーワードは1-100文字で入力してください', 'keyword', keyword);
 ```
@@ -593,16 +633,19 @@ throw new ValidationError('キーワードは1-100文字で入力してくださ
 **クラス名**: `NotFoundError`
 
 **発生条件**:
+
 - 指定されたIDの店舗が存在しない場合
 - 指定されたIDの登録が存在しない場合
 
 **対処方法**:
+
 - ユーザー: 正しいIDを指定
 - 開発者: ID生成・参照ロジックを確認
 
 **HTTPステータス**: 404 Not Found
 
 **例**:
+
 ```typescript
 throw new NotFoundError('Registration', registrationId);
 ```
@@ -612,9 +655,11 @@ throw new NotFoundError('Registration', registrationId);
 **クラス名**: `ForbiddenError`
 
 **発生条件**:
+
 - 他のユーザーの登録にアクセスしようとした場合
 
 **対処方法**:
+
 - ユーザー: 自分の登録のみ操作可能
 - 開発者: 認可チェックを確認
 
@@ -625,10 +670,12 @@ throw new NotFoundError('Registration', registrationId);
 **クラス名**: `ExternalApiError`
 
 **発生条件**:
+
 - Google Places APIの呼び出しが失敗した場合
 - API利用上限に達した場合
 
 **対処方法**:
+
 - ユーザー: しばらく待ってから再試行
 - 開発者: APIキー、利用量、ネットワークを確認
 
@@ -637,44 +684,53 @@ throw new NotFoundError('Registration', registrationId);
 ## 索引
 
 ### あ行
+
 - [APIレイヤー](#apiレイヤー-api-layer) - アーキテクチャ用語
 - [匿名ユーザー](#匿名ユーザー-anonymous-user) - ドメイン用語
 
 ### か行
+
 - [Cloudflare Pages](#cloudflare-pages) - 技術用語
 - [Cloudflare Workers](#cloudflare-workers) - 技術用語
 - [検索キーワード](#検索キーワード-search-keyword) - ドメイン用語
 - [Google Places API](#google-places-api) - 技術用語
 
 ### さ行
+
 - [サービスレイヤー](#サービスレイヤー-service-layer) - アーキテクチャ用語
 - [Supabase](#supabase) - 技術用語
 - [shops テーブル](#shops-テーブル) - データモデル用語
 
 ### た行
+
 - [データレイヤー](#データレイヤー-data-layer) - アーキテクチャ用語
 - [店舗](#店舗-shop) - ドメイン用語
 - [登録](#登録-registration) - ドメイン用語
 
 ### は行
+
 - [Hono](#hono) - 技術用語
 - [ポップアップ](#ポップアップ-popup) - ドメイン用語
 
 ### ま行
+
 - [マーカー](#マーカー-marker) - ドメイン用語
 - [モノレポ](#モノレポ-monorepo) - アーキテクチャ用語
 
 ### や行
+
 - [優先度](#優先度-priority) - ドメイン用語
 - [ユーザー認証](#ユーザー認証-user-authentication) - ドメイン用語
 
 ### ら行
+
 - [Leaflet](#leaflet) - 技術用語
 - [リポジトリレイヤー](#リポジトリレイヤー-repository-layer) - アーキテクチャ用語
 - [レイヤードアーキテクチャ](#レイヤードアーキテクチャ-layered-architecture) - アーキテクチャ用語
 - [registrations テーブル](#registrations-テーブル) - データモデル用語
 
 ### A-Z
+
 - [API](#api) - 略語
 - [MVP](#mvp) - 略語
 - [Next.js](#nextjs) - 技術用語
@@ -685,6 +741,7 @@ throw new NotFoundError('Registration', registrationId);
 - [UUID](#uuid) - 略語
 
 ### エラー
+
 - [ExternalApiError](#externalapierror) - エラー
 - [ForbiddenError](#forbiddenerror) - エラー
 - [NotFoundError](#notfounderror) - エラー

@@ -21,20 +21,20 @@ meshi-map/
 
 ### 採用理由
 
-| 利点 | 説明 |
-|------|------|
-| コード共有の容易さ | `packages/shared` で型定義を共有し、フロントエンド・バックエンド間の型安全性を確保 |
-| 依存関係の一元管理 | ルートの `package.json` で全パッケージの依存を管理、バージョン不整合を防止 |
-| 将来の拡張性 | React Native等のモバイルアプリを `apps/mobile` として追加可能 |
-| 統一されたビルド・テスト | `npm run test` で全パッケージのテストを一括実行可能 |
+| 利点                     | 説明                                                                               |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| コード共有の容易さ       | `packages/shared` で型定義を共有し、フロントエンド・バックエンド間の型安全性を確保 |
+| 依存関係の一元管理       | ルートの `package.json` で全パッケージの依存を管理、バージョン不整合を防止         |
+| 将来の拡張性             | React Native等のモバイルアプリを `apps/mobile` として追加可能                      |
+| 統一されたビルド・テスト | `npm run test` で全パッケージのテストを一括実行可能                                |
 
 ### 制約・注意点
 
-| 制約 | 対策 |
-|------|------|
-| ビルド時間の増加 | workspace単位でのビルド（`npm run build -w apps/web`）も可能にする |
-| 依存関係の複雑化 | 循環依存を禁止し、依存方向を厳格に管理（本ドキュメント参照） |
-| IDE対応 | TypeScriptのプロジェクト参照（`tsconfig.json`の`references`）を活用 |
+| 制約             | 対策                                                                |
+| ---------------- | ------------------------------------------------------------------- |
+| ビルド時間の増加 | workspace単位でのビルド（`npm run build -w apps/web`）も可能にする  |
+| 依存関係の複雑化 | 循環依存を禁止し、依存方向を厳格に管理（本ドキュメント参照）        |
+| IDE対応          | TypeScriptのプロジェクト参照（`tsconfig.json`の`references`）を活用 |
 
 ### npm workspaces
 
@@ -43,10 +43,7 @@ meshi-map/
 {
   "name": "meshi-map",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "workspaces": ["apps/*", "packages/*"]
 }
 ```
 
@@ -108,11 +105,13 @@ apps/web/
 ```
 
 **命名規則**:
+
 - コンポーネント: PascalCase（`MapView.tsx`）
 - フック: camelCase、`use`プレフィックス（`useGeolocation.ts`）
 - ユーティリティ: kebab-case（`api-client.ts`）
 
 **依存関係**:
+
 - 依存可能: `packages/shared`
 - 依存禁止: `packages/database`、`apps/api`
 
@@ -149,16 +148,19 @@ apps/api/
 ```
 
 **命名規則**:
+
 - サービス: PascalCase + `Service`サフィックス（`ShopSearchService.ts`）
 - リポジトリ: PascalCase + `Repository`サフィックス（`ShopRepository.ts`）
 - ルート: kebab-case（`shops.ts`）
 - ミドルウェア: camelCase（`errorHandler.ts`）
 
 **依存関係**:
+
 - 依存可能: `packages/shared`、`packages/database`
 - 依存禁止: `apps/web`
 
 **レイヤー間の依存**:
+
 ```
 routes (APIレイヤー)
     ↓
@@ -194,11 +196,13 @@ packages/shared/
 ```
 
 **命名規則**:
+
 - 型定義: kebab-case（`shop.ts`）
 - 定数: kebab-case（`api-endpoints.ts`）
 - ユーティリティ: kebab-case（`validation.ts`）
 
 **依存関係**:
+
 - 依存可能: 外部ライブラリのみ
 - 依存禁止: `apps/*`、`packages/database`
 
@@ -223,10 +227,12 @@ packages/database/
 ```
 
 **命名規則**:
+
 - スキーマ: kebab-case、テーブル名と同一（`shops.ts`）
 - マイグレーション: `[番号]_[説明].sql`
 
 **依存関係**:
+
 - 依存可能: `packages/shared`（型定義のみ）、`@supabase/supabase-js`
 - 依存禁止: `apps/*`
 
@@ -265,6 +271,7 @@ docs/
 **命名規則**: `20250115-add-shop-filter` 形式
 
 **Git管理方針**:
+
 - `.steering/` はGit管理下に置き、プロジェクトの開発履歴として保持
 - 完了した作業の知見は、必要に応じて `docs/` 配下の永続ドキュメントに反映
 
@@ -320,11 +327,13 @@ meshi-map/
 ```
 
 **命名規則**:
+
 - ユニットテスト: `[対象ファイル名].test.ts(x)`
 - 統合テスト: `[シナリオ].test.ts`
 - E2Eテスト: `[シナリオ].spec.ts`
 
 **テストフレームワーク**（architecture.md準拠）:
+
 - ユニットテスト・統合テスト: Vitest
 - E2Eテスト: Playwright
 
@@ -332,26 +341,26 @@ meshi-map/
 
 ### ソースファイル
 
-| ファイル種別 | 配置先 | 命名規則 | 例 |
-|------------|--------|---------|-----|
-| Reactコンポーネント | `apps/web/src/components/` | PascalCase | `MapView.tsx` |
-| カスタムフック | `apps/web/src/hooks/` | camelCase + use | `useGeolocation.ts` |
-| APIルート | `apps/api/src/routes/` | kebab-case | `shops.ts` |
-| サービス | `apps/api/src/services/` | PascalCase + Service | `ShopSearchService.ts` |
-| リポジトリ | `apps/api/src/repositories/` | PascalCase + Repository | `ShopRepository.ts` |
-| 型定義 | `packages/shared/src/types/` | kebab-case | `shop.ts` |
-| 定数 | `packages/shared/src/constants/` | kebab-case | `api-endpoints.ts` |
+| ファイル種別        | 配置先                           | 命名規則                | 例                     |
+| ------------------- | -------------------------------- | ----------------------- | ---------------------- |
+| Reactコンポーネント | `apps/web/src/components/`       | PascalCase              | `MapView.tsx`          |
+| カスタムフック      | `apps/web/src/hooks/`            | camelCase + use         | `useGeolocation.ts`    |
+| APIルート           | `apps/api/src/routes/`           | kebab-case              | `shops.ts`             |
+| サービス            | `apps/api/src/services/`         | PascalCase + Service    | `ShopSearchService.ts` |
+| リポジトリ          | `apps/api/src/repositories/`     | PascalCase + Repository | `ShopRepository.ts`    |
+| 型定義              | `packages/shared/src/types/`     | kebab-case              | `shop.ts`              |
+| 定数                | `packages/shared/src/constants/` | kebab-case              | `api-endpoints.ts`     |
 
 ### 設定ファイル
 
-| ファイル | 配置先 | 説明 |
-|---------|--------|------|
-| `package.json` | 各ディレクトリ | パッケージ設定 |
-| `tsconfig.json` | 各ディレクトリ | TypeScript設定 |
-| `next.config.js` | `apps/web/` | Next.js設定 |
-| `wrangler.toml` | `apps/api/` | Cloudflare Workers設定 |
-| `.env.local` | `apps/web/` | ローカル環境変数（Git除外） |
-| `.dev.vars` | `apps/api/` | Workers開発用環境変数（Git除外） |
+| ファイル         | 配置先         | 説明                             |
+| ---------------- | -------------- | -------------------------------- |
+| `package.json`   | 各ディレクトリ | パッケージ設定                   |
+| `tsconfig.json`  | 各ディレクトリ | TypeScript設定                   |
+| `next.config.js` | `apps/web/`    | Next.js設定                      |
+| `wrangler.toml`  | `apps/api/`    | Cloudflare Workers設定           |
+| `.env.local`     | `apps/web/`    | ローカル環境変数（Git除外）      |
+| `.dev.vars`      | `apps/api/`    | Workers開発用環境変数（Git除外） |
 
 ## ルートディレクトリの設定ファイル
 
@@ -381,6 +390,7 @@ external / database (データレイヤー)
 ```
 
 **禁止される依存**:
+
 - `repositories` → `routes` (❌)
 - `services` → `routes` (❌)
 - `external` → `services` (❌)
@@ -400,6 +410,7 @@ packages/database
 ```
 
 **禁止される依存**:
+
 - `apps/web` → `packages/database` (❌ バックエンド経由でアクセス)
 - `apps/web` → `apps/api` (❌ 直接importしない)
 - `packages/*` → `apps/*` (❌)
@@ -412,7 +423,7 @@ packages/database
 import { RegistrationService } from './RegistrationService';
 
 // services/RegistrationService.ts
-import { ShopSearchService } from './ShopSearchService';  // 循環依存！
+import { ShopSearchService } from './ShopSearchService'; // 循環依存！
 ```
 
 **解決策**: 共通の型やインターフェースを`packages/shared`に抽出
@@ -421,21 +432,21 @@ import { ShopSearchService } from './ShopSearchService';  // 循環依存！
 
 ### 機能追加時の配置
 
-| 機能規模 | 配置方針 | 例 |
-|---------|---------|-----|
-| 小規模 | 既存ディレクトリに追加 | 新しいAPI endpoint |
-| 中規模 | サブディレクトリを作成 | `components/filter/` |
-| 大規模 | 新しいパッケージを作成 | `packages/analytics/` |
+| 機能規模 | 配置方針               | 例                    |
+| -------- | ---------------------- | --------------------- |
+| 小規模   | 既存ディレクトリに追加 | 新しいAPI endpoint    |
+| 中規模   | サブディレクトリを作成 | `components/filter/`  |
+| 大規模   | 新しいパッケージを作成 | `packages/analytics/` |
 
 ### スケールアップの閾値
 
-| 指標 | 閾値（80%到達） | 測定方法 | 測定頻度 | 対策 |
-|------|---------------|---------|---------|------|
-| ユーザー数 | 500人超過 | Supabase Analytics（匿名ユーザーID数） | 週次 | 有料プランへの移行検討 |
-| 店舗数 | 5,000店舗超過 | `SELECT COUNT(*) FROM shops` | 週次 | インデックスの追加、クエリ最適化 |
-| 登録数 | 50,000件超過 | `SELECT COUNT(*) FROM registrations` | 週次 | ページネーションの実装 |
-| Supabase DB容量 | 400MB超過 | Supabase Dashboard「Database Usage」 | 週次 | データ圧縮、アーカイブ検討 |
-| ファイルサイズ | 500行超過 | ESLintルール `max-lines`、PR時自動チェック | PR毎 | ファイル分割実施 |
+| 指標            | 閾値（80%到達） | 測定方法                                   | 測定頻度 | 対策                             |
+| --------------- | --------------- | ------------------------------------------ | -------- | -------------------------------- |
+| ユーザー数      | 500人超過       | Supabase Analytics（匿名ユーザーID数）     | 週次     | 有料プランへの移行検討           |
+| 店舗数          | 5,000店舗超過   | `SELECT COUNT(*) FROM shops`               | 週次     | インデックスの追加、クエリ最適化 |
+| 登録数          | 50,000件超過    | `SELECT COUNT(*) FROM registrations`       | 週次     | ページネーションの実装           |
+| Supabase DB容量 | 400MB超過       | Supabase Dashboard「Database Usage」       | 週次     | データ圧縮、アーカイブ検討       |
+| ファイルサイズ  | 500行超過       | ESLintルール `max-lines`、PR時自動チェック | PR毎     | ファイル分割実施                 |
 
 ### ファイルサイズの管理
 
@@ -444,6 +455,7 @@ import { ShopSearchService } from './ShopSearchService';  // 循環依存！
 - **分割必須**: 500行以上
 
 **分割例**:
+
 ```typescript
 // Before: 1ファイルに全機能
 // components/MapView.tsx (600行)

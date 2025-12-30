@@ -33,15 +33,15 @@ graph TB
 
 ## 技術スタック
 
-| 分類 | 技術 | 選定理由 |
-|------|------|----------|
-| フロントエンド | Next.js | React ベース、Cloudflare Pages と相性良い |
-| バックエンド | Hono | 軽量、Cloudflare Workers と相性良い |
-| データベース | Supabase (PostgreSQL) | 無料枠あり、認証機能内蔵（将来利用） |
-| 地図ライブラリ | Leaflet (React Leaflet) | 無料、オープンソース、軽量 |
-| 店舗検索API | Google Places API | 日本のデータが豊富、無料枠あり |
-| ホスティング | Cloudflare Pages/Workers | 無料枠が充実、クレカ不要 |
-| 言語 | TypeScript | 型安全性、開発効率 |
+| 分類           | 技術                     | 選定理由                                  |
+| -------------- | ------------------------ | ----------------------------------------- |
+| フロントエンド | Next.js                  | React ベース、Cloudflare Pages と相性良い |
+| バックエンド   | Hono                     | 軽量、Cloudflare Workers と相性良い       |
+| データベース   | Supabase (PostgreSQL)    | 無料枠あり、認証機能内蔵（将来利用）      |
+| 地図ライブラリ | Leaflet (React Leaflet)  | 無料、オープンソース、軽量                |
+| 店舗検索API    | Google Places API        | 日本のデータが豊富、無料枠あり            |
+| ホスティング   | Cloudflare Pages/Workers | 無料枠が充実、クレカ不要                  |
+| 言語           | TypeScript               | 型安全性、開発効率                        |
 
 ## データモデル定義
 
@@ -49,12 +49,13 @@ graph TB
 
 ```typescript
 interface AnonymousUser {
-  id: string;              // UUID v4（ローカルストレージに保存）
-  createdAt: Date;         // 初回アクセス日時
+  id: string; // UUID v4（ローカルストレージに保存）
+  createdAt: Date; // 初回アクセス日時
 }
 ```
 
 **制約**:
+
 - idはフロントエンドで生成し、ローカルストレージに保存
 - サーバーにはAnonymousUserテーブルは作成しない（IDのみ利用）
 
@@ -62,21 +63,22 @@ interface AnonymousUser {
 
 ```typescript
 interface Shop {
-  id: string;              // UUID v4
-  placeId: string;         // Google Places API の Place ID
-  name: string;            // 店舗名（1-200文字）
-  address: string;         // 住所
-  latitude: number;        // 緯度（-90 〜 90）
-  longitude: number;       // 経度（-180 〜 180）
-  category: string;        // 料理カテゴリ（例: "ラーメン", "イタリアン"）
-  photoUrl?: string;       // 店舗画像URL（Google Places API から取得）
-  googleMapsUrl: string;   // Google Maps へのリンク
-  createdAt: Date;         // 作成日時
-  updatedAt: Date;         // 更新日時
+  id: string; // UUID v4
+  placeId: string; // Google Places API の Place ID
+  name: string; // 店舗名（1-200文字）
+  address: string; // 住所
+  latitude: number; // 緯度（-90 〜 90）
+  longitude: number; // 経度（-180 〜 180）
+  category: string; // 料理カテゴリ（例: "ラーメン", "イタリアン"）
+  photoUrl?: string; // 店舗画像URL（Google Places API から取得）
+  googleMapsUrl: string; // Google Maps へのリンク
+  createdAt: Date; // 作成日時
+  updatedAt: Date; // 更新日時
 }
 ```
 
 **制約**:
+
 - placeIdはユニーク（同じ店舗の重複登録を防ぐ）
 - name, address, category は必須
 
@@ -84,14 +86,15 @@ interface Shop {
 
 ```typescript
 interface Registration {
-  id: string;              // UUID v4
+  id: string; // UUID v4
   anonymousUserId: string; // 匿名ユーザーID（FK）
-  shopId: string;          // 店舗ID（FK）
-  createdAt: Date;         // 登録日時
+  shopId: string; // 店舗ID（FK）
+  createdAt: Date; // 登録日時
 }
 ```
 
 **制約**:
+
 - 同一ユーザーが同一店舗を重複登録できない（anonymousUserId + shopId でユニーク）
 
 ### ER図
@@ -143,6 +146,7 @@ GET /api/shops/search?q={keyword}
 | lng | number | No | 現在地の経度（検索結果の並び順に使用） |
 
 **レスポンス（成功）**:
+
 ```json
 {
   "shops": [
@@ -161,11 +165,13 @@ GET /api/shops/search?q={keyword}
 ```
 
 **エラーレスポンス**:
+
 - 400 Bad Request: キーワードが空または100文字超過
 - 500 Internal Server Error: Google Places API エラー
 - 503 Service Unavailable: API利用上限到達
 
 **内部処理**:
+
 1. Google Places API (Text Search) を呼び出し
 2. レスポンスから必要な情報を抽出・整形
 3. 最大20件まで返却
@@ -184,6 +190,7 @@ POST /api/registrations
 | X-Anonymous-User-Id | string | 匿名ユーザーID |
 
 **リクエストボディ**:
+
 ```json
 {
   "placeId": "ChIJ...",
@@ -198,6 +205,7 @@ POST /api/registrations
 ```
 
 **レスポンス（成功）**:
+
 ```json
 {
   "registration": {
@@ -220,12 +228,14 @@ POST /api/registrations
 ```
 
 **エラーレスポンス**:
+
 - 400 Bad Request: 必須フィールド不足、バリデーションエラー
 - 401 Unauthorized: X-Anonymous-User-Id ヘッダがない
 - 409 Conflict: 既に登録済み
 - 500 Internal Server Error: データベースエラー
 
 **内部処理**:
+
 1. X-Anonymous-User-Id ヘッダを検証
 2. リクエストボディをバリデーション
 3. Shop テーブルに placeId が存在するか確認
@@ -248,6 +258,7 @@ GET /api/registrations
 | X-Anonymous-User-Id | string | 匿名ユーザーID |
 
 **レスポンス（成功）**:
+
 ```json
 {
   "registrations": [
@@ -271,6 +282,7 @@ GET /api/registrations
 ```
 
 **エラーレスポンス**:
+
 - 401 Unauthorized: X-Anonymous-User-Id ヘッダがない
 - 500 Internal Server Error: データベースエラー
 
@@ -290,6 +302,7 @@ DELETE /api/registrations/{registrationId}
 | X-Anonymous-User-Id | string | 匿名ユーザーID |
 
 **レスポンス（成功）**:
+
 ```json
 {
   "message": "登録を解除しました"
@@ -297,6 +310,7 @@ DELETE /api/registrations/{registrationId}
 ```
 
 **エラーレスポンス**:
+
 - 401 Unauthorized: X-Anonymous-User-Id ヘッダがない
 - 403 Forbidden: 他のユーザーの登録を削除しようとした
 - 404 Not Found: 登録が見つからない
@@ -327,12 +341,14 @@ stateDiagram-v2
 #### MapScreen（地図画面）
 
 **責務**:
+
 - 地図の表示と操作
 - 現在地の取得と表示
 - 登録店舗マーカーの表示
 - マーカータップ時のポップアップ表示
 
 **主要な状態**:
+
 ```typescript
 interface MapScreenState {
   currentLocation: { lat: number; lng: number } | null;
@@ -344,6 +360,7 @@ interface MapScreenState {
 ```
 
 **依存関係**:
+
 - React Leaflet（地図表示）
 - Geolocation API（現在地取得）
 - API Client（登録店舗取得）
@@ -353,11 +370,13 @@ interface MapScreenState {
 #### SearchScreen（検索画面）
 
 **責務**:
+
 - 検索キーワードの入力
 - 検索結果の表示
 - 店舗の登録処理
 
 **主要な状態**:
+
 ```typescript
 interface SearchScreenState {
   keyword: string;
@@ -370,6 +389,7 @@ interface SearchScreenState {
 ```
 
 **依存関係**:
+
 - API Client（店舗検索、店舗登録）
 
 ---
@@ -377,18 +397,20 @@ interface SearchScreenState {
 #### ShopPopup（店舗詳細ポップアップ）
 
 **責務**:
+
 - 店舗詳細情報の表示
 - Google Mapsリンクの提供
 - 登録解除機能の提供
 
 **Props**:
+
 ```typescript
 interface ShopPopupProps {
   shop: Shop;
-  registrationId: string;       // 削除時に必要
+  registrationId: string; // 削除時に必要
   registrationDate: Date;
   onClose: () => void;
-  onDelete?: (registrationId: string) => void;  // 登録解除ハンドラ
+  onDelete?: (registrationId: string) => void; // 登録解除ハンドラ
 }
 ```
 
@@ -397,23 +419,27 @@ interface ShopPopupProps {
 #### OnboardingDialog（初回起動ダイアログ）
 
 **責務**:
+
 - 初回起動時の説明表示
 - データ消失リスクの通知
 
 **Props**:
+
 ```typescript
 interface OnboardingDialogProps {
-  isOpen: boolean;              // ダイアログ表示状態
-  onClose: () => void;          // 閉じるハンドラ
+  isOpen: boolean; // ダイアログ表示状態
+  onClose: () => void; // 閉じるハンドラ
 }
 ```
 
 **状態管理**:
+
 - `hasSeenOnboarding`: LocalStorageに保存（キー: `meshi-map:onboarding-seen`）
 - 初回起動時のみ`true`でダイアログを表示
 - 「閉じる」ボタン押下でLocalStorageに`true`を保存
 
 **表示内容**:
+
 1. アプリの使い方（3ステップ）
 2. データはこのブラウザにのみ保存される旨
 3. ブラウザのキャッシュクリアでデータが消える旨
@@ -423,12 +449,16 @@ interface OnboardingDialogProps {
 #### ShopSearchService
 
 **責務**:
+
 - Google Places API との通信
 - 検索結果の整形
 
 ```typescript
 class ShopSearchService {
-  async search(keyword: string, location?: { lat: number; lng: number }): Promise<SearchResultShop[]>;
+  async search(
+    keyword: string,
+    location?: { lat: number; lng: number }
+  ): Promise<SearchResultShop[]>;
 }
 ```
 
@@ -437,6 +467,7 @@ class ShopSearchService {
 #### RegistrationService
 
 **責務**:
+
 - 店舗登録のビジネスロジック
 - 重複チェック
 
@@ -453,6 +484,7 @@ class RegistrationService {
 #### ShopRepository
 
 **責務**:
+
 - Shop テーブルへのアクセス
 
 ```typescript
@@ -467,6 +499,7 @@ class ShopRepository {
 #### RegistrationRepository
 
 **責務**:
+
 - Registration テーブルへのアクセス
 
 ```typescript
@@ -600,51 +633,52 @@ sequenceDiagram
 
 ### マーカーデザイン
 
-| マーカー種類 | アイコン | 色 |
-|-------------|---------|-----|
-| 現在地 | 📍 | 青 |
-| 登録店舗 | 🍴 | 赤 |
+| マーカー種類 | アイコン | 色  |
+| ------------ | -------- | --- |
+| 現在地       | 📍       | 青  |
+| 登録店舗     | 🍴       | 赤  |
 
 ## エラーハンドリング
 
 ### エラーの分類
 
-| エラー種別 | 処理 | ユーザーへの表示 |
-|-----------|------|-----------------|
-| 位置情報取得失敗 | 東京駅を初期位置として表示 | 「位置情報を取得できませんでした。手動で地図を操作してください」 |
-| 検索結果0件 | 空の結果を表示 | 「検索結果が見つかりませんでした。別のキーワードで試してください」 |
-| 検索API エラー | リトライボタンを表示 | 「検索に失敗しました。しばらくしてから再度お試しください」 |
-| 登録API エラー | リトライボタンを表示 | 「登録に失敗しました。しばらくしてから再度お試しください」 |
-| 重複登録 | 何もしない（UIで防止） | 「この店舗は既に登録済みです」 |
-| ネットワークエラー | オフライン表示 | 「インターネットに接続されていません」 |
-| API利用上限到達 | サービス停止表示 | 「現在サービスを一時停止しています。しばらくしてからお試しください」 |
-| 認証エラー (401) | ローカルストレージを確認し、匿名IDを再生成 | 「セッションが無効です。ページを再読み込みしてください」 |
-| データベース接続エラー | リトライボタンを表示 | 「データベースに接続できません。しばらくしてから再度お試しください」 |
-| 不正な匿名ID形式 | ローカルストレージをクリアし、新規ID生成 | 「データが破損しています。リセットして再度お試しください」 |
-| 他ユーザーのデータアクセス (403) | エラー表示 | 「このデータにはアクセスできません」 |
+| エラー種別                       | 処理                                       | ユーザーへの表示                                                     |
+| -------------------------------- | ------------------------------------------ | -------------------------------------------------------------------- |
+| 位置情報取得失敗                 | 東京駅を初期位置として表示                 | 「位置情報を取得できませんでした。手動で地図を操作してください」     |
+| 検索結果0件                      | 空の結果を表示                             | 「検索結果が見つかりませんでした。別のキーワードで試してください」   |
+| 検索API エラー                   | リトライボタンを表示                       | 「検索に失敗しました。しばらくしてから再度お試しください」           |
+| 登録API エラー                   | リトライボタンを表示                       | 「登録に失敗しました。しばらくしてから再度お試しください」           |
+| 重複登録                         | 何もしない（UIで防止）                     | 「この店舗は既に登録済みです」                                       |
+| ネットワークエラー               | オフライン表示                             | 「インターネットに接続されていません」                               |
+| API利用上限到達                  | サービス停止表示                           | 「現在サービスを一時停止しています。しばらくしてからお試しください」 |
+| 認証エラー (401)                 | ローカルストレージを確認し、匿名IDを再生成 | 「セッションが無効です。ページを再読み込みしてください」             |
+| データベース接続エラー           | リトライボタンを表示                       | 「データベースに接続できません。しばらくしてから再度お試しください」 |
+| 不正な匿名ID形式                 | ローカルストレージをクリアし、新規ID生成   | 「データが破損しています。リセットして再度お試しください」           |
+| 他ユーザーのデータアクセス (403) | エラー表示                                 | 「このデータにはアクセスできません」                                 |
 
 ## セキュリティ考慮事項
 
-| 考慮事項 | 対策 |
-|---------|------|
-| Google Places API キー露出 | バックエンド（Cloudflare Workers）でのみ使用、フロントエンドに露出しない |
-| SQLインジェクション | Supabase クライアントのパラメータバインディングを使用 |
-| XSS | React のデフォルトエスケープ機能を活用、dangerouslySetInnerHTML を使用しない |
-| 不正な匿名ユーザーID | UUID v4 フォーマットのバリデーション |
-| 他ユーザーのデータアクセス | 全ての API で X-Anonymous-User-Id による認可チェック |
-| HTTPS | Cloudflare が自動で HTTPS を提供 |
+| 考慮事項                   | 対策                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| Google Places API キー露出 | バックエンド（Cloudflare Workers）でのみ使用、フロントエンドに露出しない     |
+| SQLインジェクション        | Supabase クライアントのパラメータバインディングを使用                        |
+| XSS                        | React のデフォルトエスケープ機能を活用、dangerouslySetInnerHTML を使用しない |
+| 不正な匿名ユーザーID       | UUID v4 フォーマットのバリデーション                                         |
+| 他ユーザーのデータアクセス | 全ての API で X-Anonymous-User-Id による認可チェック                         |
+| HTTPS                      | Cloudflare が自動で HTTPS を提供                                             |
 
 ## パフォーマンス最適化
 
-| 最適化項目 | 手法 | 目標値 | 測定方法 |
-|-----------|------|--------|---------|
-| 地図タイル読み込み | Leaflet のデフォルトキャッシュを活用 | 2回目以降の表示1秒以内 | Performance API |
-| 登録店舗一覧 | アプリ起動時に1回だけ取得、以降は状態管理で保持 | API呼び出し1回/セッション | Network タブで計測 |
-| 検索結果 | デバウンス処理（500ms）で API 呼び出し回数を削減 | API呼び出し70%削減 | Network タブで計測 |
-| 画像読み込み | 遅延読み込み（lazy loading）を適用 | LCP 2.5秒以内 | Lighthouse |
-| マーカー表示 | 100件以上の場合はクラスタリング表示を検討（将来対応） | 30fps以上を維持 | DevTools Performance |
+| 最適化項目         | 手法                                                  | 目標値                    | 測定方法             |
+| ------------------ | ----------------------------------------------------- | ------------------------- | -------------------- |
+| 地図タイル読み込み | Leaflet のデフォルトキャッシュを活用                  | 2回目以降の表示1秒以内    | Performance API      |
+| 登録店舗一覧       | アプリ起動時に1回だけ取得、以降は状態管理で保持       | API呼び出し1回/セッション | Network タブで計測   |
+| 検索結果           | デバウンス処理（500ms）で API 呼び出し回数を削減      | API呼び出し70%削減        | Network タブで計測   |
+| 画像読み込み       | 遅延読み込み（lazy loading）を適用                    | LCP 2.5秒以内             | Lighthouse           |
+| マーカー表示       | 100件以上の場合はクラスタリング表示を検討（将来対応） | 30fps以上を維持           | DevTools Performance |
 
 **パフォーマンス目標（architecture.md準拠）**:
+
 - 地図初期表示: 2秒以内
 - 店舗検索結果表示: 3秒以内（API応答時間含む）
 - 店舗登録: 1秒以内
@@ -657,6 +691,7 @@ sequenceDiagram
 **フレームワーク**: Vitest
 **カバレッジ目標**: 80%
 **モック戦略**:
+
 - Google Places API: MSW（Mock Service Worker）でモック
 - Supabase: supabase-test-helpers を使用
 
