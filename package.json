@@ -27,7 +27,8 @@
   "workspaces": [
     "apps/web",
     "apps/api",
-    "packages/shared"
+    "packages/shared",
+    "packages/database"
   ],
   "devDependencies": {
     "@playwright/test": "^1.57.0",
