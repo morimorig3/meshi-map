@@ -178,6 +178,105 @@ async function getRegistration(id: string): Promise<Registration | null> {
 }
 ```
 
+### Tailwind CSS 規約
+
+**クラス名の記述順序**:
+
+Tailwind CSSのクラスは以下の順序で記述します:
+
+1. レイアウト（display, position, flexbox, grid）
+2. ボックスモデル（width, height, margin, padding）
+3. タイポグラフィ（font, text）
+4. 視覚効果（color, background, border, shadow）
+5. インタラクティブ（cursor, transition, animation）
+6. その他（z-index, opacity）
+
+```tsx
+// ✅ 良い例: 順序が整理されている
+<div className="flex items-center justify-between w-full px-4 py-2 text-lg font-bold text-gray-900 bg-white border rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+  店舗名
+</div>
+
+// ❌ 悪い例: 順序がランダム
+<div className="text-lg bg-white flex w-full shadow-sm py-2 rounded-lg font-bold border px-4 items-center justify-between text-gray-900 hover:bg-gray-50 transition-colors">
+  店舗名
+</div>
+```
+
+**レスポンシブデザイン**:
+
+モバイルファーストで記述し、必要に応じてブレークポイントを追加します:
+
+```tsx
+// ✅ 良い例: モバイルファースト
+<div className="w-full md:w-1/2 lg:w-1/3">
+  {/* コンテンツ */}
+</div>
+
+// ❌ 悪い例: デスクトップファースト
+<div className="w-1/3 md:w-1/2 sm:w-full">
+  {/* コンテンツ */}
+</div>
+```
+
+**カスタムクラスの使用**:
+
+繰り返し使用するスタイルは `@apply` でカスタムクラス化します:
+
+```css
+/* styles/components.css */
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors;
+  }
+
+  .card {
+    @apply p-6 bg-white border border-gray-200 rounded-lg shadow-sm;
+  }
+}
+```
+
+```tsx
+// ✅ 良い例: カスタムクラスの利用
+<button className="btn-primary">
+  検索
+</button>
+
+// ❌ 悪い例: 毎回同じクラスを繰り返し
+<button className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+  検索
+</button>
+<button className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+  登録
+</button>
+```
+
+**条件付きクラス**:
+
+条件付きでクラスを適用する場合は `clsx` または `classnames` を使用します:
+
+```tsx
+import clsx from 'clsx';
+
+// ✅ 良い例: clsx を使用
+<button
+  className={clsx(
+    'px-4 py-2 rounded-lg font-semibold transition-colors',
+    isActive ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700',
+    disabled && 'opacity-50 cursor-not-allowed'
+  )}
+>
+  ボタン
+</button>
+
+// ❌ 悪い例: 文字列結合
+<button
+  className={`px-4 py-2 rounded-lg ${isActive ? 'bg-blue-600' : 'bg-gray-200'} ${disabled ? 'opacity-50' : ''}`}
+>
+  ボタン
+</button>
+```
+
 ### React / Next.js 固有の規約
 
 **コンポーネントの構造**:
@@ -532,9 +631,8 @@ const mockSupabase = {
 
 | ツール | バージョン | インストール方法 |
 |--------|-----------|-----------------|
-| Node.js | v24.11.0 | nvm or devcontainer |
+| Node.js | v24.11.0 | nvm または公式サイトから |
 | npm | 11.x | Node.jsに同梱 |
-| Docker | latest | devcontainer利用時 |
 
 ### セットアップ手順
 

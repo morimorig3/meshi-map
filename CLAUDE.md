@@ -2,10 +2,13 @@
 
 ## 技術スタック
 
-- 開発環境: devcontainer
+- 開発環境: ローカル環境
 - Node.js v24.11.0
 - TypeScript 5.x
 - パッケージマネージャー: npm
+- フロントエンド: Next.js 15.x + React 19.x + Tailwind CSS 4.x
+- バックエンド: Hono 4.x + Cloudflare Workers
+- データベース: Supabase (PostgreSQL)
 
 ## スペック駆動開発の基本原則
 

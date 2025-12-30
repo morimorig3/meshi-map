@@ -6,7 +6,7 @@
 
 | 技術 | バージョン | 選定理由 |
 |------|-----------|----------|
-| Node.js | v24.11.0 | LTS版、devcontainer環境で統一 |
+| Node.js | v24.11.0 | LTS版、安定した開発環境 |
 | TypeScript | 5.x | 静的型付けによる開発効率とコード品質の向上 |
 | npm | 11.x | Node.js標準搭載、workspacesでモノレポ対応 |
 
@@ -16,6 +16,7 @@
 |------|-----------|------|----------|
 | Next.js | 15.x | Webアプリケーションフレームワーク | React ベース、Cloudflare Pages対応、SSR/SSG対応 |
 | React | 19.x | UIライブラリ | Next.js標準搭載、コンポーネントベース開発 |
+| Tailwind CSS | 4.x | CSSフレームワーク | ユーティリティファースト、高速開発、Next.js公式推奨 |
 | React Leaflet | 5.x | 地図コンポーネント | Leafletのreactラッパー、無料・オープンソース |
 | Leaflet | 1.9.x | 地図ライブラリ | 軽量、無料、OpenStreetMapタイル対応 |
 
@@ -368,7 +369,6 @@ const validationRules = {
 **開発環境**:
 - OS: macOS / Linux / Windows (WSL2)
 - Node.js: v24.11.0
-- Docker: devcontainer利用時
 
 ### Cloudflare Workers 制約
 
